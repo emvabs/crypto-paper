@@ -33,6 +33,24 @@ A real run needs `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` in the environment.
    ticked (alerts appear in the log), then without. The schedule starts on
    its own after that.
 
+### Dashboard
+
+`docs/` is a static page published with GitHub Pages. One-time setup:
+Settings → Pages → Build and deployment → Source: **GitHub Actions**. The
+Dashboard workflow then publishes it whenever `docs/` changes, at
+`https://<you>.github.io/<repo>/`.
+
+The page reads `data/state.json` straight from the repository
+(raw.githubusercontent.com, cached up to 5 minutes) and refreshes every 5
+minutes, so new runs show up without republishing. It never calls OKX.
+Locally, serve the repository root and open `/docs/`:
+
+```bash
+.venv/bin/python -m http.server 8000   # then http://localhost:8000/docs/
+```
+
+`?state=<url>` loads a different state file, e.g. a sample.
+
 ### How the schedule behaves
 
 - Runs every 15 minutes at :07, :22, :37 and :52. GitHub delays scheduled
@@ -88,8 +106,8 @@ A real run needs `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` in the environment.
 - **Trailing stop:** 8% below the highest price since entry, active only after T2.
 - **Spread filter:** 0.2% of mid price.
 - **Daily candles** use OKX's `1Dutc` bar; only bars with `confirm = 1` count.
-- **Repo visibility:** to be decided before the dashboard phase (a public repo
-  shows holdings and trades to anyone).
+- **Repo visibility:** public. Holdings, paper trades and the dashboard are
+  visible to anyone with the link.
 - **Watchlist:** BTC and ETH are left out (they are the core), and so are
   OKX's tokenized stocks (`instCategory` 3, e.g. XMSTR). Both are config
   switches (`exclude_core`, `inst_categories`). The 24h ticker volume picks

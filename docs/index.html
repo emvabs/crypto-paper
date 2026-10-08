@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crypto Paper</title>
+  <meta name="description" content="Core-satellite paper trading: core drift, open paper trades, watchlist and recent alerts.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%232a78d6'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23fcfcfb'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    // apply a saved theme before first paint
+    try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  </script>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap top-row">
+      <div>
+        <h1>Crypto paper</h1>
+        <p class="updated" id="updated">Loading…</p>
+      </div>
+      <button class="theme" id="theme" type="button" aria-label="Colour theme">Auto</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div id="banners"></div>
+
+    <section class="hero" aria-labelledby="hero-label">
+      <p class="label" id="hero-label">Total paper value</p>
+      <p class="hero-value" id="hero-value">–</p>
+      <p class="hero-sub" id="hero-sub"></p>
+    </section>
+
+    <div class="tiles" id="tiles"></div>
+
+    <section aria-labelledby="core-h">
+      <div class="section-head">
+        <h2 id="core-h">Core</h2>
+        <p class="note" id="core-note"></p>
+      </div>
+      <div class="card" id="core"></div>
+    </section>
+
+    <section aria-labelledby="sat-h">
+      <div class="section-head">
+        <h2 id="sat-h">Satellite</h2>
+        <p class="note" id="sat-note"></p>
+      </div>
+      <div id="trades"></div>
+    </section>
+
+    <section aria-labelledby="wl-h">
+      <div class="section-head">
+        <h2 id="wl-h">Watchlist</h2>
+        <p class="note" id="wl-note"></p>
+      </div>
+      <div class="card flush" id="watchlist"></div>
+    </section>
+
+    <section aria-labelledby="al-h">
+      <div class="section-head">
+        <h2 id="al-h">Recent alerts</h2>
+      </div>
+      <ol class="card alerts" id="alerts"></ol>
+    </section>
+
+    <footer class="foot">
+      Paper trading only. Prices from OKX public market data; runs every ~15 minutes.
+    </footer>
+  </main>
+
+  <div class="tip" id="tip" role="tooltip" hidden></div>
+  <script src="app.js"></script>
+</body>
+</html>
