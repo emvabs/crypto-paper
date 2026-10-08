@@ -2,6 +2,7 @@
 
 Paper-trading alerts and a static dashboard for a core-satellite strategy on
 OKX Europe. Public market data only: no API keys, no orders, no account access.
+Paper buys and sells are recorded from the dashboard (or by editing the files).
 
 All strategy numbers live in `config.json`.
 
@@ -42,7 +43,8 @@ Dashboard workflow then publishes it whenever `docs/` changes, at
 
 The page reads `data/state.json` straight from the repository
 (raw.githubusercontent.com, cached up to 5 minutes) and refreshes every 5
-minutes, so new runs show up without republishing. It never calls OKX.
+minutes, so new runs show up without republishing. Only the Trade section
+calls OKX, for a live price when you pick a coin.
 Locally, serve the repository root and open `/docs/`:
 
 ```bash
@@ -50,6 +52,36 @@ Locally, serve the repository root and open `/docs/`:
 ```
 
 `?state=<url>` loads a different state file, e.g. a sample.
+
+### Trading from the dashboard
+
+The **Trade** section records paper trades as commits to this repository:
+
+- **Core:** buy or sell BTC, ETH or USDC. Updates `core_holdings.json` and
+  appends to `trade_log.csv`. Sells are capped at what you hold; "All" sells
+  the whole position.
+- **Satellite:** buy a watchlist coin. Appends a row to `paper_trades.csv`
+  (next free id, ask price as entry, EUR size) and to `trade_log.csv`. Buys
+  that break a rule (size, 3 open trades, floor, regime filter, pair already
+  open, no breakout) show the rule and need "Buy anyway". Exits stay automatic.
+- **Prices:** picking a coin fetches the live ticker from `www.okx.com`
+  (`eea.okx.com` doesn't allow requests from web pages, so it is the
+  fallback). Buys fill at the ask, sells at the bid, BTC/ETH converted with
+  `USDC-EUR`, less `satellite.fee_rate`. If OKX can't be reached, the last
+  run's price is used and labelled.
+- **Saving** needs a GitHub token, kept in your browser only (never in the
+  repo). Create a fine-grained token (GitHub → Settings → Developer settings →
+  Fine-grained tokens) with access to **this repository only** and
+  **Contents: Read and write**, then paste it under "Connect GitHub". Without a
+  token the section is read-only. Anyone can open the page, but only a browser
+  holding your token can save.
+- Each trade is one commit (`Dashboard buy …`). If a bot run pushes at the
+  same moment, the page starts again from the new commit, so neither change is
+  lost. The figures above update after the next run (~15 minutes).
+
+`trade_log.csv` rows from the dashboard: `price` is in the pair's quote
+currency (USDC, or EUR for `USDC-EUR`), `fee` is in EUR, `notes` holds the EUR
+amount and EUR price.
 
 ### How the schedule behaves
 
@@ -77,10 +109,10 @@ Locally, serve the repository root and open `/docs/`:
 
 | File | What goes in it |
 |---|---|
-| `data/core_holdings.json` | Quantity held of BTC, ETH, USDC |
-| `data/paper_trades.csv` | A new row per paper buy: `id, date_opened, pair, entry_price, size_eur` (and `notes`). The script fills in the rest. |
+| `data/core_holdings.json` | Quantity held of BTC, ETH, USDC (the dashboard's core trades update it) |
+| `data/paper_trades.csv` | A new row per paper buy: `id, date_opened, pair, entry_price, size_eur` (and `notes`). The script fills in the rest. Satellite buys from the dashboard add these rows. |
 | `data/transfers.csv` | Money moved between bags: `date, from_bag, to_bag, amount_eur, notes` (`core` / `satellite`) |
-| `data/trade_log.csv` | Your own record of every buy and sell; the script does not read it |
+| `data/trade_log.csv` | Record of every buy and sell; the dashboard appends to it, you can too. The script does not read it |
 
 ## Alerts
 

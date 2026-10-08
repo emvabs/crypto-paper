@@ -214,3 +214,61 @@ th.r, td.r { text-align: right; }
 @media (forced-colors: active) {
   .strip .dot, .ladder .dot { forced-color-adjust: none; background: CanvasText; }
 }
+
+/* Trade */
+.trade-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; }
+.segs { display: inline-flex; border: 1px solid var(--ring); border-radius: 999px; padding: 2px; gap: 2px; }
+.seg {
+  font: inherit; font-size: var(--t-sm); color: var(--ink-2); background: transparent;
+  border: 0; border-radius: 999px; padding: 6px 14px; min-height: 32px; cursor: pointer;
+}
+.seg.on { background: var(--ink); color: var(--surface); }
+.segs.small { margin-top: 14px; }
+.link {
+  font: inherit; font-size: var(--t-sm); color: var(--mark); background: none; border: 0;
+  padding: 4px 2px; cursor: pointer; text-decoration: underline; text-underline-offset: 2px;
+}
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+.chip {
+  font: inherit; display: flex; flex-direction: column; align-items: flex-start; gap: 0;
+  min-width: 76px; padding: 6px 12px; cursor: pointer; text-align: left;
+  color: var(--ink); background: var(--plane); border: 1px solid var(--ring); border-radius: var(--r-sm);
+}
+.chip span { color: var(--ink-2); font-size: var(--t-xs); }
+.chip:hover { border-color: var(--axis); }
+.chip.on { border-color: var(--mark); box-shadow: 0 0 0 1px var(--mark); background: var(--mark-wash); }
+#trade-panel { border-top: 1px solid var(--grid); padding-top: 14px; }
+.quote { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 12px; }
+.quote .pair { margin-right: 8px; }
+.field { display: grid; gap: 4px; margin-top: 14px; }
+.amount-row { display: flex; align-items: center; gap: 10px; }
+.field input {
+  font: inherit; color: var(--ink); background: var(--plane);
+  border: 1px solid var(--axis); border-radius: var(--r-sm); padding: 8px 10px; min-height: 40px;
+  width: 100%; max-width: 220px;
+}
+.dialog .field input { max-width: none; }
+.field input:focus-visible, .seg:focus-visible, .chip:focus-visible, .link:focus-visible, .primary:focus-visible {
+  outline: 2px solid var(--mark); outline-offset: 2px;
+}
+.calc { margin-top: 10px; font-size: var(--t-sm); }
+.warns {
+  margin-top: 10px; padding: 10px 12px; font-size: var(--t-sm);
+  border: 1px solid var(--ring); border-left: 4px solid var(--warning); border-radius: var(--r-sm);
+}
+.warns ul { margin: 4px 0 8px; padding-left: 18px; color: var(--ink-2); }
+.check { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 14px; }
+.primary {
+  font: inherit; font-weight: 600; color: var(--surface); background: var(--mark);
+  border: 0; border-radius: var(--r-sm); padding: 8px 18px; min-height: 40px; cursor: pointer;
+}
+.primary:disabled { opacity: 0.45; cursor: not-allowed; }
+.trade-msg { margin-top: 12px; font-size: var(--t-sm); overflow-wrap: anywhere; }
+.trade-msg a { color: var(--mark); }
+.dialog {
+  width: min(460px, calc(100vw - 32px)); padding: 20px; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--ring); border-radius: var(--r);
+}
+.dialog::backdrop { background: rgba(0, 0, 0, 0.4); }
+.dialog .note { margin-top: 8px; }

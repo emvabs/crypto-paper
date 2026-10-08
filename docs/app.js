@@ -1,4 +1,5 @@
-// Dashboard: reads the state.json each run commits. No calls to OKX.
+// Dashboard: reads the state.json each run commits. Only the Trade section
+// (trade.js) calls OKX, for a live price when you pick a coin.
 "use strict";
 
 const STALE_MS = 60 * 60 * 1000;
@@ -114,7 +115,7 @@ function renderCore(s) {
   }
   if (!core.total_eur) {
     $("core-note").textContent = "";
-    $("core").innerHTML = '<p class="empty">No holdings yet. Add quantities to <code>data/core_holdings.json</code>.</p>';
+    $("core").innerHTML = '<p class="empty">No holdings yet. Buy from the Trade section, or add quantities to <code>data/core_holdings.json</code>.</p>';
     return;
   }
   $("core-note").textContent = core.rebalance_due ? `Quarterly rebalance due (${core.rebalance_due})` : `Value ${eur(core.total_eur)}`;
@@ -195,7 +196,7 @@ function renderSatellite(s) {
     ? status("warning", "pause", `New entries paused: ${block}`)
     : status("good", "check", "New entries allowed");
   if (!sat.open_trades.length) {
-    $("trades").innerHTML = '<div class="card"><p class="empty">No open paper trades. Add a row to <code>data/paper_trades.csv</code> when you take a breakout.</p></div>';
+    $("trades").innerHTML = '<div class="card"><p class="empty">No open paper trades. Buy from the Trade section, or add a row to <code>data/paper_trades.csv</code>, when you take a breakout.</p></div>';
     return;
   }
   $("trades").innerHTML = `<div class="trades">${sat.open_trades
@@ -303,6 +304,7 @@ function render(s) {
   layoutLadders();
   renderWatchlist(s);
   renderAlerts(s);
+  if (typeof renderTrade === "function") renderTrade(s);
 }
 
 async function load() {

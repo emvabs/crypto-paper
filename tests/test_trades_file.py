@@ -91,3 +91,17 @@ def test_reconcile_applies_our_exits_to_the_users_newer_file(tmp_path):
     rows = trades_file.read_rows(theirs)
     assert rows[0]["exit2_price"] == "125" and rows[0]["status"] == "Open"
     assert rows[1]["notes"] == "added on GitHub" and rows[1]["status"] == ""
+
+
+def test_reads_a_row_appended_by_the_dashboard(tmp_path):
+    # docs/trade.js appends rows in exactly this shape: ask price as OKX sends
+    # it, size rounded to cents, notes in the last column
+    p = tmp_path / "t.csv"
+    p.write_text(HEADER + "\n" + line("7") + "\n"
+                 + "8,2026-10-08,SOL-USDC,106.12,5,,,,,,,,,,,dashboard\n")
+    trades, problems = trades_file.load(p)
+    assert problems == []
+    t = trades[1]
+    assert (t.id, t.pair, t.entry_price, t.size_eur) == ("8", "SOL-USDC", 106.12, 5.0)
+    trades_file.write(p, trades)
+    assert p.read_text().splitlines()[2].endswith(",dashboard")
