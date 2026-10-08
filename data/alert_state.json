@@ -1,0 +1,14 @@
+{
+  "active": {},
+  "events": {
+    "heartbeat:2026-10-08": "2026-10-08T15:48:52Z"
+  },
+  "pending": [],
+  "history": [
+    {
+      "time": "2026-10-08T15:48:52Z",
+      "key": "heartbeat:2026-10-08",
+      "text": "✅ Daily check-in: the job is running.\nCore 0.00 € · Satellite 20.00 € · open trades 0"
+    }
+  ]
+}
