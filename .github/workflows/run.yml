@@ -1,0 +1,64 @@
+name: Paper run
+
+on:
+  schedule:
+    # every 15 minutes, off the hour: top-of-hour runs are delayed most
+    - cron: "7,22,37,52 * * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Print alerts in the log; send and commit nothing"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write   # commit data/
+  actions: write    # keep the schedule enabled
+
+concurrency:
+  group: paper-run
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Dry run
+        if: inputs.dry_run
+        run: python -m src.main --dry-run
+
+      - name: Run
+        id: run
+        if: ${{ !inputs.dry_run }}
+        continue-on-error: true   # still commit state when an alert failed to send
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python -m src.main
+
+      - name: Commit state
+        if: ${{ !inputs.dry_run && hashFiles('data/state.json') != '' }}
+        run: scripts/commit_state.sh
+
+      - name: Keep the schedule enabled
+        # public repos disable schedules after 60 days without activity;
+        # re-enabling an enabled workflow is a no-op that may reset the timer
+        if: ${{ !inputs.dry_run }}
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/run.yml/enable"
+
+      - name: Fail if the run failed
+        if: steps.run.outcome == 'failure'
+        run: exit 1

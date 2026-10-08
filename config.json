@@ -1,0 +1,86 @@
+{
+  "okx": {
+    "base_url": "https://eea.okx.com",
+    "fallback_base_url": "https://www.okx.com",
+    "timeout_seconds": 10,
+    "max_retries": 3,
+    "backoff_seconds": 1.0
+  },
+  "valuation": {
+    "quote": "USDC",
+    "eur_pair": "USDC-EUR"
+  },
+  "allocation": {
+    "start_eur": 100,
+    "core_share": 0.8,
+    "satellite_share": 0.2
+  },
+  "core": {
+    "pairs": {
+      "BTC": "BTC-USDC",
+      "ETH": "ETH-USDC"
+    },
+    "targets": {
+      "BTC": 0.5,
+      "ETH": 0.3,
+      "USDC": 0.2
+    },
+    "drift_band": 0.05,
+    "rebalance_months": [
+      1,
+      4,
+      7,
+      10
+    ]
+  },
+  "watchlist": {
+    "quote": "USDC",
+    "size_min": 5,
+    "size_max": 10,
+    "volume_days": 7,
+    "min_history_days": 30,
+    "max_spread": 0.002,
+    "exclude_bases": [
+      "USDT",
+      "USDC",
+      "EURC",
+      "DAI",
+      "FDUSD",
+      "TUSD",
+      "USDE",
+      "PYUSD",
+      "USDG",
+      "RLUSD",
+      "EUR"
+    ],
+    "exclude_core": true,
+    "inst_categories": [
+      "1"
+    ],
+    "_inst_categories_note": "OKX instCategory: 1 = crypto, 3 = tokenized stocks"
+  },
+  "satellite": {
+    "breakout_lookback_days": 20,
+    "trade_size_eur": 5,
+    "max_open_trades": 3,
+    "stop_loss": 0.08,
+    "target1": 0.1,
+    "target2": 0.2,
+    "trailing_stop": 0.08,
+    "trailing_starts_after": "T2",
+    "fee_rate": 0.001,
+    "floor_eur": 10,
+    "sweep_above_eur": 25
+  },
+  "regime_filter": {
+    "enabled": false,
+    "pair": "BTC-USDC",
+    "sma_days": 200
+  },
+  "sanity": {
+    "max_move_between_runs": 0.25
+  },
+  "alerts": {
+    "heartbeat": true
+  }
+}
