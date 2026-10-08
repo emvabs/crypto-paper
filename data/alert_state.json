@@ -1,7 +1,10 @@
 {
-  "active": {},
+  "active": {
+    "drift:BTC+ETH+USDC": "2026-10-08T19:23:11Z"
+  },
   "events": {
-    "heartbeat:2026-10-08": "2026-10-08T15:48:52Z"
+    "heartbeat:2026-10-08": "2026-10-08T15:48:52Z",
+    "rebalance:2026-10": "2026-10-08T19:23:11Z"
   },
   "pending": [],
   "history": [
@@ -9,6 +12,16 @@
       "time": "2026-10-08T15:48:52Z",
       "key": "heartbeat:2026-10-08",
       "text": "✅ Daily check-in: the job is running.\nCore 0.00 € · Satellite 20.00 € · open trades 0"
+    },
+    {
+      "time": "2026-10-08T19:23:11Z",
+      "key": "drift:BTC+ETH+USDC",
+      "text": "⚖️ Core drift\nBTC at 62.4% (band 45.0%–55.0%, target 50.0%)\nETH at 37.6% (band 25.0%–35.0%, target 30.0%)\nUSDC at 0.0% (band 15.0%–25.0%, target 20.0%)\nCore value 64.16 €. To return to target: BTC sell 7.98 €, ETH sell 4.85 €, USDC buy 12.83 €."
+    },
+    {
+      "time": "2026-10-08T19:23:11Z",
+      "key": "rebalance:2026-10",
+      "text": "🗓️ Quarterly rebalance due (2026-10). Core value 64.16 €.\nTo return to target: BTC sell 7.98 €, ETH sell 4.85 €, USDC buy 12.83 €."
     }
   ]
 }
