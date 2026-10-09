@@ -47,7 +47,7 @@ jobs:
         run: python -m src.main
 
       - name: Commit state
-        if: ${{ !inputs.dry_run && hashFiles('data/state.json') != '' }}
+        if: ${{ !inputs.dry_run }}
         run: scripts/commit_state.sh
 
       - name: Keep the schedule enabled

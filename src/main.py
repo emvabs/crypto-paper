@@ -60,11 +60,20 @@ class Run:
         self.evaluated: set[str] = set()
         self.problems: list[str] = []
         self.tickers: dict = {}
+        self.checked: dict[str, float | None] = {}  # price() result per pair this run
 
     # ------------------------------------------------------------ prices
 
     def price(self, pair: str) -> float | None:
-        """Last price, or None (and a data-problem alert) when it can't be trusted."""
+        """Last price, or None (and a data-problem alert) when it can't be trusted.
+
+        Checked once per pair per run, so two trades on one pair share a result.
+        """
+        if pair not in self.checked:
+            self.checked[pair] = self._check_price(pair)
+        return self.checked[pair]
+
+    def _check_price(self, pair: str) -> float | None:
         t = self.tickers.get(pair)
         last = t.last if t else None
         reason = None
@@ -223,6 +232,7 @@ class Run:
         return {
             "start_eur": start, "transfers_eur": transfers, "balance_eur": balance,
             "status": status, "floor_eur": sat["floor_eur"],
+            "max_open_trades": sat["max_open_trades"],
             "sweep_above_eur": sat["sweep_above_eur"],
             "realized_eur": sum(t.realized_pnl(fee) for t in trades),
             "unrealized_eur": sum(r["unrealized_eur"] or 0 for r in open_rows),
@@ -281,7 +291,7 @@ class Run:
             self.problems.append(f"watchlist has only {len(items)} pairs")
         return {
             "candle_date": candle_date, "run_at": alerts.stamp(self.now),
-            "watchlist": rows, "entry_block": block,
+            "lookback_days": lookback, "watchlist": rows, "entry_block": block,
             "regime": {"enabled": reg["enabled"], "pair": reg["pair"],
                        "sma_days": reg["sma_days"], "sma": sma,
                        "close": btc[-1].close, "allows_entries": regime_ok},

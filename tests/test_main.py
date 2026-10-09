@@ -164,3 +164,18 @@ def test_okx_unreachable_sends_one_data_alert_and_keeps_files(data):
     assert len(sent) == 1 and "OKX unreachable" in sent[0]
     assert (data / "paper_trades.csv").read_text() == trades_before
     assert state["core"] is not None  # last known values kept for the dashboard
+
+
+def test_two_trades_on_one_jumping_pair_report_the_problem_once(data):
+    go(FakeOKX({**PRICES, "SOL-USDC": 101}), data)
+    with (data / "paper_trades.csv").open("a") as f:
+        f.write("2,2026-10-02,SOL-USDC,100,5" + "," * 11 + "\n")
+    state, _ = go(FakeOKX({**PRICES, "SOL-USDC": 60}), data, now=NOW + timedelta(minutes=15))
+    assert [p for p in state["problems"] if p.startswith("SOL-USDC")] == [
+        "SOL-USDC: jumped from 101.00 to 60 since the last run"]
+
+
+def test_state_carries_the_limits_the_dashboard_shows(data):
+    state, _ = go(FakeOKX(PRICES), data)
+    assert state["satellite"]["max_open_trades"] == 3
+    assert state["daily"]["lookback_days"] == 20

@@ -81,16 +81,50 @@ def test_transfers(tmp_path):
     assert trades_file.load_transfers(tmp_path / "none.csv") == 0
 
 
-def test_reconcile_applies_our_exits_to_the_users_newer_file(tmp_path):
-    ours, theirs = tmp_path / "ours.csv", tmp_path / "theirs.csv"
+def run_exit(tmp_path, price):
+    """base.csv as the run read it, ours.csv after the run applied `price`."""
+    base, ours = tmp_path / "base.csv", tmp_path / "ours.csv"
+    write_csv(base, line("1"))
     write_csv(ours, line("1"))
     trades, _ = trades_file.load(ours)
-    trades_file.write(ours, [rules.step(trades[0], 125, NOW, SAT)[0]])
+    trades_file.write(ours, [rules.step(trades[0], price, NOW, SAT)[0]])
+    return base, ours
+
+
+def test_reconcile_applies_our_exits_to_the_users_newer_file(tmp_path):
+    base, ours = run_exit(tmp_path, 125)
+    theirs = tmp_path / "theirs.csv"
     write_csv(theirs, line("1"), line("2", pair="XRP-USDC", notes="added on GitHub"))
-    trades_file.reconcile(ours, theirs)
+    trades_file.reconcile(base, ours, theirs)
     rows = trades_file.read_rows(theirs)
     assert rows[0]["exit2_price"] == "125" and rows[0]["status"] == "Open"
     assert rows[1]["notes"] == "added on GitHub" and rows[1]["status"] == ""
+
+
+def test_reconcile_keeps_a_users_edit_to_a_script_column(tmp_path):
+    base, ours = run_exit(tmp_path, 125)
+    theirs = tmp_path / "theirs.csv"
+    edited = line("1").split(",")
+    edited[rules.COLUMNS.index("trailing_high")] = "130"  # user fixed it on GitHub
+    write_csv(theirs, ",".join(edited))
+    trades_file.reconcile(base, ours, theirs)
+    row = trades_file.read_rows(theirs)[0]
+    assert row["trailing_high"] == "130" and row["exit1_price"] == ""
+
+
+def test_extra_columns_survive_a_write_and_a_reconcile(tmp_path):
+    p = tmp_path / "t.csv"
+    p.write_text(HEADER + ",tag\n" + line("1") + ",swing\n")
+    trades, _ = trades_file.load(p)
+    trades_file.write(p, [rules.step(trades[0], 111, NOW, SAT)[0]])
+    row = trades_file.read_rows(p)[0]
+    assert row["tag"] == "swing" and row["exit1_price"] == "111"
+
+    base, ours = run_exit(tmp_path, 125)
+    p.write_text(HEADER + ",tag\n" + line("1") + ",swing\n")
+    trades_file.reconcile(base, ours, p)
+    assert p.read_text().splitlines()[0].endswith(",tag")
+    assert trades_file.read_rows(p)[0]["tag"] == "swing"
 
 
 def test_reads_a_row_appended_by_the_dashboard(tmp_path):

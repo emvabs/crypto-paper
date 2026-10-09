@@ -14,6 +14,7 @@ const TRADE_COLUMNS = ["id", "date_opened", "pair", "entry_price", "size_eur",
   "exit1_price", "exit1_time", "exit2_price", "exit2_time", "exit3_price", "exit3_time",
   "exit3_reason", "trailing_high", "date_closed", "status", "notes"];
 const LOG_COLUMNS = ["date", "bag", "pair", "side", "quantity", "price", "fee", "notes"];
+const QUOTE_MAX_AGE_MS = 60 * 1000; // older quotes are re-fetched before saving
 
 const store = {
   get(k) { try { return localStorage.getItem(k) || ""; } catch (e) { return ""; } },
@@ -29,6 +30,7 @@ const T = {
   quote: null,  // fetched prices for the selected coin
   amount: null, // typed EUR amount, kept across redraws
   sellAll: false,
+  override: false, // "Buy anyway" ticked
   busy: false,
   message: null, // html of the last save's result
   // Saves the bot hasn't picked up yet: state.json lags by up to a run.
@@ -70,16 +72,21 @@ function priceEur(q, side) {
   return q.isEurPair ? q[k] : q[k] * q.usdcEur[k];
 }
 
+// `cash` is the change in the core's USDC: BTC and ETH trade against it like
+// on the USDC pairs, so a buy spends USDC and a sell's proceeds land in it.
+// USDC itself (the EUR pair) moves EUR in or out of the core: no cash leg.
 function computeOrder({ side, amountEur, q, feeRate, holding, sellAll }) {
   const px = priceEur(q, side);
   if (side === "buy") {
     const fee = amountEur * feeRate;
-    return { px, fee, quantity: (amountEur - fee) / px, amountEur };
+    const cash = q.isEurPair ? 0 : -amountEur / q.usdcEur.ask;
+    return { px, fee, quantity: (amountEur - fee) / px, amountEur, cash };
   }
   const quantity = sellAll ? holding : amountEur / px;
   const gross = sellAll ? holding * px : amountEur;
   const fee = gross * feeRate;
-  return { px, fee, quantity, amountEur: gross };
+  const cash = q.isEurPair ? 0 : (gross - fee) / q.usdcEur.bid;
+  return { px, fee, quantity, amountEur: gross, cash };
 }
 
 // ------------------------------------------------------------ data
@@ -97,7 +104,7 @@ function repoInfo() {
 
 async function loadConfig() {
   if (T.config) return T.config;
-  const url = stateUrl().replace(/data\/state\.json(\?.*)?$/, "config.json");
+  const url = defaultStateUrl().replace(/data\/state\.json$/, "config.json");
   try {
     const r = await fetch(`${url}?t=${Date.now()}`, { cache: "no-store" });
     if (r.ok) T.config = await r.json();
@@ -124,11 +131,11 @@ async function okxTicker(instId) {
 
 // Live prices for a pair plus USDC-EUR; falls back to the last run's prices.
 async function fetchQuote(pair) {
-  const eurPair = (T.config && T.config.valuation.eur_pair) || "USDC-EUR";
+  const eurPair = (T.config && T.config.valuation && T.config.valuation.eur_pair) || "USDC-EUR";
   const isEurPair = pair === eurPair;
   try {
     const [p, u] = await Promise.all([okxTicker(pair), isEurPair ? null : okxTicker(eurPair)]);
-    return { pair, ...p, usdcEur: u || p, isEurPair, live: true, time: new Date(p.ts).toISOString() };
+    return { pair, ...p, usdcEur: u || p, isEurPair, live: true, time: new Date(p.ts).toISOString(), fetchedAt: Date.now() };
   } catch (e) {
     const s = T.state;
     const wl = ((s.daily && s.daily.watchlist) || []).find((w) => w.pair === pair);
@@ -138,7 +145,7 @@ async function fetchQuote(pair) {
     const pxStr = String(px);
     return {
       pair, ask: px, bid: px, askStr: pxStr, bidStr: pxStr, isEurPair,
-      usdcEur: { ask: usdc, bid: usdc }, live: false, time: s.updated_at, error: e.message,
+      usdcEur: { ask: usdc, bid: usdc }, live: false, time: s.updated_at, error: e.message, fetchedAt: Date.now(),
     };
   }
 }
@@ -213,6 +220,10 @@ async function commitFiles(paths, change, message) {
 
 // ------------------------------------------------------------ rules
 
+function cashAsset() {
+  return (T.config && T.config.valuation && T.config.valuation.quote) || "USDC";
+}
+
 function coreAssets() {
   const pairs = (T.config && T.config.core.pairs) || { BTC: "BTC-USDC", ETH: "ETH-USDC" };
   const v = (T.config && T.config.valuation) || { quote: "USDC", eur_pair: "USDC-EUR" };
@@ -235,7 +246,7 @@ function satelliteWarnings(amountEur) {
   const sat = T.state.satellite;
   const cfg = (T.config && T.config.satellite) || {};
   const out = [];
-  const max = cfg.max_open_trades ?? 3;
+  const max = cfg.max_open_trades ?? sat.max_open_trades ?? 3;
   const openPairs = [...sat.open_trades.map((t) => t.pair), ...T.saved.satPairs];
   if (cfg.trade_size_eur && Math.abs(amountEur - cfg.trade_size_eur) > 1e-9) {
     out.push(`Trade size is ${eur(cfg.trade_size_eur)} in the rules, not ${eur(amountEur)}.`);
@@ -246,7 +257,8 @@ function satelliteWarnings(amountEur) {
   if (reg && reg.enabled && reg.allows_entries === false) out.push("Regime filter is blocking: BTC is below its moving average.");
   if (T.coin && openPairs.includes(T.coin.pair)) out.push(`${T.coin.pair} already has an open trade.`);
   const wl = ((T.state.daily && T.state.daily.watchlist) || []).find((w) => T.coin && w.pair === T.coin.pair);
-  if (wl && !wl.breakout) out.push(`${T.coin.asset} is not breaking out (${pctSigned(wl.distance_from_high)} vs its 20-day high).`);
+  const days = (T.state.daily && T.state.daily.lookback_days) || cfg.breakout_lookback_days || 20;
+  if (wl && !wl.breakout) out.push(`${T.coin.asset} is not breaking out (${pctSigned(wl.distance_from_high)} vs its ${days}-day high).`);
   return out;
 }
 
@@ -261,6 +273,8 @@ function renderTrade(s) {
 
 function drawTrade() {
   if (!T.state) return;
+  // the 5-minute refresh redraws the card: keep the cursor in the amount box
+  const typing = document.activeElement && document.activeElement.id === "trade-amount";
   const token = store.get("trade-token");
   $("trade-note").innerHTML = token && repoInfo()
     ? status("good", "check", `Saves to ${repoInfo()}`)
@@ -287,6 +301,7 @@ function drawTrade() {
     <div class="chips">${chips}</div>
     <div id="trade-panel"></div>`;
   drawPanel();
+  if (typing && $("trade-amount")) $("trade-amount").focus();
 }
 
 function drawPanel() {
@@ -316,7 +331,11 @@ function drawPanel() {
       ${["buy", "sell"].map((sd) => `<button type="button" class="seg${T.side === sd ? " on" : ""}" data-side="${sd}" aria-pressed="${T.side === sd}">${sd === "buy" ? "Buy" : "Sell"}</button>`).join("")}
     </div>` : "";
   const defaultAmt = !isCore && cfg.satellite ? cfg.satellite.trade_size_eur : "";
+  if (T.sellAll) T.amount = (holding * px).toFixed(2);
   const amtValue = T.amount ?? String(defaultAmt);
+  const cashNote = isCore && q.isEurPair
+    ? `<p class="note">${esc(cashAsset())} is the core's cash. Buying it adds EUR to the core, selling takes EUR out; BTC and ETH buys are paid from it.</p>`
+    : "";
 
   el.innerHTML = `
     <div class="quote">
@@ -327,6 +346,7 @@ function drawPanel() {
         <button type="button" class="link" id="trade-refresh">Refresh</button></div>
     </div>
     ${sides}
+    ${cashNote}
     <label class="field"><span class="label">Amount in EUR</span>
       <span class="amount-row"><input id="trade-amount" type="number" inputmode="decimal" min="0" step="0.01" value="${esc(amtValue)}" placeholder="0.00">
       ${isCore && T.side === "sell" ? `<button type="button" class="link" id="trade-max">All (${price(holding)})</button>` : ""}</span>
@@ -347,6 +367,12 @@ function currentOrder() {
   if (T.side === "sell" && o.quantity > holding + 1e-12) {
     return { ...o, holding, invalid: `You hold ${price(holding)} ${T.coin.asset} (${eur(holding * o.px)}).` };
   }
+  if (T.bag === "core" && o.cash < 0) {
+    const cash = holdingOf(cashAsset());
+    if (-o.cash > cash + 1e-9) {
+      return { ...o, holding, invalid: `Core cash is ${price(cash)} ${cashAsset()} (${eur(cash * T.quote.usdcEur.ask)}). Sell something or buy ${cashAsset()} first.` };
+    }
+  }
   return { ...o, holding };
 }
 
@@ -361,11 +387,13 @@ function drawCalc() {
   } else {
     const verb = T.side === "buy" ? "get" : "sell";
     const net = T.side === "buy" ? "" : ` · you receive ${eur(o.amountEur - o.fee)}`;
-    html = `<p class="calc num">You ${verb} <strong>${price(o.quantity)} ${esc(T.coin.asset)}</strong> · fee ${eur(o.fee)}${net}</p>`;
+    const cash = T.bag !== "core" || !o.cash ? ""
+      : ` · ${o.cash < 0 ? "paid from" : "into"} core cash: ${price(Math.abs(o.cash))} ${esc(cashAsset())}`;
+    html = `<p class="calc num">You ${verb} <strong>${price(o.quantity)} ${esc(T.coin.asset)}</strong> · fee ${eur(o.fee)}${net}${cash}</p>`;
     const warns = T.bag === "satellite" ? satelliteWarnings(o.amountEur) : [];
     if (warns.length) {
       html += `<div class="warns">${status("warning", "alert", "Breaks the satellite rules")}<ul>${warns.map((w) => `<li>${esc(w)}</li>`).join("")}</ul>
-        <label class="check"><input type="checkbox" id="trade-override"> Buy anyway</label></div>`;
+        <label class="check"><input type="checkbox" id="trade-override"${T.override ? " checked" : ""}> Buy anyway</label></div>`;
     }
   }
   const label = T.side === "buy" ? "Confirm buy" : "Confirm sell";
@@ -378,7 +406,8 @@ function drawCalc() {
 function updateConfirm() {
   const btn = $("trade-confirm");
   const box = $("trade-override");
-  if (btn && box && !T.busy) btn.disabled = !box.checked;
+  const canSave = !!(store.get("trade-token") && repoInfo());
+  if (btn && box && !T.busy) btn.disabled = !box.checked || !canSave;
 }
 
 function messageHtml() {
@@ -390,6 +419,7 @@ function messageHtml() {
 async function selectCoin(pair, asset) {
   T.coin = { pair, asset };
   T.sellAll = false;
+  T.override = false;
   T.amount = null;
   T.message = null;
   T.quote = { loading: true };
@@ -404,8 +434,26 @@ async function selectCoin(pair, asset) {
 }
 
 async function confirmTrade() {
+  if (T.busy) return;
+  if (Date.now() - T.quote.fetchedAt > QUOTE_MAX_AGE_MS) {
+    // never save at a price fetched minutes ago: refresh and ask again
+    const { pair, asset } = T.coin;
+    T.busy = true;
+    drawCalc();
+    try {
+      const q = await fetchQuote(pair);
+      if (T.coin && T.coin.pair === pair) T.quote = q;
+      T.message = `${status("warning", "alert", "Price refreshed")} The price was over a minute old. Check the numbers and confirm again.`;
+    } catch (e) {
+      T.message = `${status("critical", "alert", "Not saved")} Could not refresh the ${esc(asset)} price: ${esc(e.message)}.`;
+    } finally {
+      T.busy = false;
+      drawPanel();
+    }
+    return;
+  }
   const o = currentOrder();
-  if (o.invalid || T.busy) return;
+  if (o.invalid) return;
   const { asset, pair } = T.coin;
   const q = T.quote;
   const side = T.side;
@@ -413,7 +461,10 @@ async function confirmTrade() {
   const nativePx = side === "buy" ? q.askStr : q.bidStr;
   const when = nowIso();
   const src = q.live ? "dashboard" : "dashboard, last run price";
-  const note = `${src}; ${eur(o.amountEur)} at ${eur(o.px)}/${asset}`;
+  const cashCcy = cashAsset();
+  const cashNote = bag === "core" && o.cash
+    ? `; ${o.cash < 0 ? "paid" : "received"} ${round(Math.abs(o.cash), 6)} ${cashCcy}` : "";
+  const note = `${src}; ${eur(o.amountEur)} at ${eur(o.px)}/${asset}${cashNote}`;
   const logRow = {
     date: when, bag, pair, side, quantity: round(o.quantity, 10), price: nativePx,
     fee: round(o.fee, 4), notes: note,
@@ -430,13 +481,13 @@ async function confirmTrade() {
       if (bag === "core") {
         const h = cur[FILES.holdings] ? JSON.parse(cur[FILES.holdings]) : {};
         const held = Number(h[asset]) || 0;
-        let next;
-        if (side === "buy") next = held + o.quantity;
-        else {
-          if (o.quantity > held + 1e-12) throw new Error(`the repo shows only ${held} ${asset}`);
-          next = T.sellAll ? 0 : held - o.quantity;
+        if (side === "sell" && o.quantity > held + 1e-12) throw new Error(`the repo shows only ${held} ${asset}`);
+        h[asset] = round(Math.max(0, side === "buy" ? held + o.quantity : held - o.quantity), 10);
+        if (o.cash) {
+          const cash = (Number(h[cashCcy]) || 0) + o.cash;
+          if (cash < -1e-9) throw new Error(`the repo shows only ${Number(h[cashCcy]) || 0} ${cashCcy} of core cash`);
+          h[cashCcy] = round(Math.max(0, cash), 10);
         }
-        h[asset] = round(Math.max(0, next), 10);
         out[FILES.holdings] = JSON.stringify(h, null, 2) + "\n";
         newHoldings = h;
       } else {
@@ -453,6 +504,7 @@ async function confirmTrade() {
       : `Opened satellite trade ${esc(tradeId)}: ${esc(pair)} at ${esc(nativePx)}, ${eur(o.amountEur)}.`;
     T.message = `${status("good", "check", "Saved")} ${what} <a href="${esc(commit.html_url)}" target="_blank" rel="noopener">Commit</a>. The dashboard shows it after the next run (about 15 minutes).`;
     T.sellAll = false;
+    T.override = false;
     T.amount = "";
     T.saved.at = Date.now();
     if (newHoldings) T.saved.holdings = newHoldings;
@@ -487,7 +539,7 @@ function initTrade() {
     } else if (b.dataset.pair) {
       selectCoin(b.dataset.pair, b.dataset.asset);
     } else if (b.dataset.side) {
-      T.side = b.dataset.side; T.sellAll = false; T.amount = null; T.message = null;
+      T.side = b.dataset.side; T.sellAll = false; T.override = false; T.amount = null; T.message = null;
       drawPanel();
     } else if (b.id === "trade-refresh") {
       selectCoin(T.coin.pair, T.coin.asset);
@@ -503,10 +555,10 @@ function initTrade() {
     }
   });
   root.addEventListener("input", (e) => {
-    if (e.target.id === "trade-amount") { T.amount = e.target.value; T.sellAll = false; drawCalc(); }
+    if (e.target.id === "trade-amount") { T.amount = e.target.value; T.sellAll = false; T.override = false; drawCalc(); }
   });
   root.addEventListener("change", (e) => {
-    if (e.target.id === "trade-override") updateConfirm();
+    if (e.target.id === "trade-override") { T.override = e.target.checked; updateConfirm(); }
   });
 
   $("trade-dialog").addEventListener("close", () => {

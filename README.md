@@ -51,15 +51,20 @@ Locally, serve the repository root and open `/docs/`:
 .venv/bin/python -m http.server 8000   # then http://localhost:8000/docs/
 ```
 
-`?state=<url>` loads a different state file, e.g. a sample.
+`?state=<url>` loads a different state file, e.g. a sample. Only files on the
+same site or in this repository are accepted, because the page holds your
+GitHub token.
 
 ### Trading from the dashboard
 
 The **Trade** section records paper trades as commits to this repository:
 
 - **Core:** buy or sell BTC, ETH or USDC. Updates `core_holdings.json` and
-  appends to `trade_log.csv`. Sells are capped at what you hold; "All" sells
-  the whole position.
+  appends to `trade_log.csv`. USDC is the core's cash: BTC and ETH buys are
+  paid from it (capped at the USDC you hold) and sells are paid into it, so
+  the core's value only moves with prices and fees. Buying USDC adds new EUR
+  to the core; selling it takes EUR out. Sells are capped at what you hold;
+  "All" sells the whole position.
 - **Satellite:** buy a watchlist coin. Appends a row to `paper_trades.csv`
   (next free id, ask price as entry, EUR size) and to `trade_log.csv`. Buys
   that break a rule (size, 3 open trades, floor, regime filter, pair already
@@ -68,7 +73,8 @@ The **Trade** section records paper trades as commits to this repository:
   (`eea.okx.com` doesn't allow requests from web pages, so it is the
   fallback). Buys fill at the ask, sells at the bid, BTC/ETH converted with
   `USDC-EUR`, less `satellite.fee_rate`. If OKX can't be reached, the last
-  run's price is used and labelled.
+  run's price is used and labelled. A price more than a minute old is fetched
+  again when you confirm, and you confirm once more at the new price.
 - **Saving** needs a GitHub token, kept in your browser only (never in the
   repo). Create a fine-grained token (GitHub → Settings → Developer settings →
   Fine-grained tokens) with access to **this repository only** and
@@ -92,9 +98,9 @@ amount and EUR price.
   exits in `data/paper_trades.csv` as `github-actions[bot]`.
 - **You can edit `paper_trades.csv` on GitHub at any time.** If you push while
   a run is in progress, the bot starts again from your version and re-applies
-  only its exits (`scripts/commit_state.sh`). Rows you added or changed keep
-  your version; if you edited a trade the run had just closed, your edit wins
-  and the next run re-evaluates it.
+  only its exits (`scripts/commit_state.sh`). Rows you added or changed (in any
+  column) keep your version; if you edited a trade the run had just closed,
+  your edit wins and the next run re-evaluates it. Columns you add are kept.
 - **Schedules switch off after 60 days without activity** in public
   repositories. GitHub doesn't say whether the bot's own commits count, so each
   run also calls the "enable workflow" API, and the daily heartbeat message
@@ -109,7 +115,7 @@ amount and EUR price.
 
 | File | What goes in it |
 |---|---|
-| `data/core_holdings.json` | Quantity held of BTC, ETH, USDC (the dashboard's core trades update it) |
+| `data/core_holdings.json` | Quantity held of BTC, ETH, USDC; USDC is the core's unspent cash (the dashboard's core trades update it) |
 | `data/paper_trades.csv` | A new row per paper buy: `id, date_opened, pair, entry_price, size_eur` (and `notes`). The script fills in the rest. Satellite buys from the dashboard add these rows. |
 | `data/transfers.csv` | Money moved between bags: `date, from_bag, to_bag, amount_eur, notes` (`core` / `satellite`) |
 | `data/trade_log.csv` | Record of every buy and sell; the dashboard appends to it, you can too. The script does not read it |

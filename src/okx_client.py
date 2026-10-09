@@ -65,22 +65,33 @@ class OKXClient:
         return cls(**config["okx"])
 
     def _get(self, path: str, params: dict) -> list:
-        """GET with retries and exponential backoff; tries the fallback host last."""
+        """GET with retries and exponential backoff; tries the fallback host last.
+
+        A request error (HTTP 4xx other than 429, or an OKX 51xxx parameter
+        code) won't succeed on a retry, so it moves straight to the next host.
+        """
         last_error: Exception | None = None
         for host in self.hosts:
             for attempt in range(self.max_retries):
+                if attempt:
+                    time.sleep(self.backoff * 2 ** (attempt - 1))
                 try:
                     r = self.http.get(host + path, params=params)
                     if r.status_code == 429 or r.status_code >= 500:
                         raise OKXError(f"HTTP {r.status_code}")
-                    r.raise_for_status()
+                    if r.status_code >= 400:
+                        last_error = OKXError(f"HTTP {r.status_code}")
+                        break
                     body = r.json()
-                    if body.get("code") != "0":
-                        raise OKXError(f"OKX code {body.get('code')}: {body.get('msg')}")
+                    code = str(body.get("code"))
+                    if code.startswith("51"):
+                        last_error = OKXError(f"OKX code {code}: {body.get('msg')}")
+                        break
+                    if code != "0":
+                        raise OKXError(f"OKX code {code}: {body.get('msg')}")
                     return body["data"]
                 except (httpx.HTTPError, OKXError, ValueError) as e:
                     last_error = e
-                    time.sleep(self.backoff * 2 ** attempt)
         raise OKXError(f"{path} {params} failed: {last_error}")
 
     @staticmethod

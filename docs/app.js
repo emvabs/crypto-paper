@@ -5,18 +5,35 @@
 const STALE_MS = 60 * 60 * 1000;
 const REFRESH_MS = 5 * 60 * 1000;
 
-// Where state.json lives: ?state=<url> wins; on GitHub Pages it is read from
-// the repository (raw.githubusercontent.com allows cross-origin reads), so the
-// page shows each run's commit without a Pages rebuild; locally, ../data/.
-function stateUrl() {
-  const q = new URLSearchParams(location.search).get("state");
-  if (q) return q;
+// Where state.json lives: on GitHub Pages it is read from the repository
+// (raw.githubusercontent.com allows cross-origin reads), so the page shows
+// each run's commit without a Pages rebuild; locally, ../data/.
+function defaultStateUrl() {
   if (location.hostname.endsWith(".github.io")) {
     const owner = location.hostname.split(".")[0];
     const repo = location.pathname.split("/").filter(Boolean)[0];
     return `https://raw.githubusercontent.com/${owner}/${repo}/main/data/state.json`;
   }
   return "../data/state.json";
+}
+
+// ?state=<url> loads another state file, but only from this site or this
+// repository: the page holds a GitHub token, so it never renders a file
+// someone else controls.
+function trustedStateUrl(u) {
+  try {
+    const url = new URL(u, location.href);
+    if (url.origin === location.origin) return true;
+    const repoRoot = new URL(defaultStateUrl(), location.href).href.replace(/[^/]+\/data\/state\.json$/, "");
+    return repoRoot.startsWith("https://raw.githubusercontent.com/") && url.href.startsWith(repoRoot);
+  } catch (e) {
+    return false;
+  }
+}
+
+const stateParam = new URLSearchParams(location.search).get("state");
+function stateUrl() {
+  return stateParam && trustedStateUrl(stateParam) ? stateParam : defaultStateUrl();
 }
 
 // ------------------------------------------------------------ formatting
@@ -67,6 +84,9 @@ function renderHeader(s) {
   const stale = Date.now() - Date.parse(s.updated_at) > STALE_MS;
   $("updated").textContent = `Updated ${ago(s.updated_at)} · ${localTime(s.updated_at)}`;
   const banners = [];
+  if (stateParam && !trustedStateUrl(stateParam)) {
+    banners.push(`<div class="banner">${status("warning", "alert", "")}<div>Ignored <code>?state=${esc(stateParam)}</code>: only files from this site or this repository can be loaded.</div></div>`);
+  }
   if (stale) {
     banners.push(`<div class="banner critical">${status("critical", "alert", "")}<div><strong>Data is more than an hour old.</strong> The scheduled run may be delayed or switched off — check the Actions tab.</div></div>`);
   }
@@ -77,7 +97,7 @@ function renderHeader(s) {
     banners.push(`<div class="banner">${status("warning", "alert", "")}<div><strong>Data problems this run</strong><ul>${s.problems.map((p) => `<li>${esc(p)}</li>`).join("")}</ul></div></div>`);
   }
   if (s.pending_alerts) {
-    banners.push(`<div class="banner">${status("warning", "alert", "")}<div>${s.pending_alerts} alert(s) failed to send to Telegram and will be retried.</div></div>`);
+    banners.push(`<div class="banner">${status("warning", "alert", "")}<div>${Number(s.pending_alerts)} alert(s) failed to send to Telegram and will be retried.</div></div>`);
   }
   $("banners").innerHTML = banners.join("");
 }
@@ -90,16 +110,16 @@ function renderHero(s) {
   $("hero-sub").textContent = `Core ${eur(core)} · Satellite ${eur(satValue)} incl. open trades`;
 
   const open = sat.open_trades.length;
-  const max = 3;
+  const max = Number(sat.max_open_trades) || 3;
   const bagStatus = {
     ok: status("good", "check", "Within limits"),
     pause: status("critical", "pause", "Below floor — paused"),
     sweep: status("warning", "up", "Above sweep level"),
-  }[sat.status];
+  }[sat.status] || "";
   const tiles = [
     ["Satellite balance", eur(sat.balance_eur), bagStatus],
     ["Open trades", `${open} of ${max}`, open ? `Unrealized ${eurSigned(sat.unrealized_eur)}` : "No open trades"],
-    ["Win rate", sat.win_rate == null ? "–" : pct(sat.win_rate, 0), `${sat.closed_trades} closed trade${sat.closed_trades === 1 ? "" : "s"}`],
+    ["Win rate", sat.win_rate == null ? "–" : pct(sat.win_rate, 0), `${Number(sat.closed_trades) || 0} closed trade${sat.closed_trades === 1 ? "" : "s"}`],
     ["Realized P&L", eurSigned(sat.realized_eur), `Floor ${eur(sat.floor_eur)} · sweep above ${eur(sat.sweep_above_eur)}`],
   ];
   $("tiles").innerHTML = tiles
@@ -110,6 +130,7 @@ function renderHero(s) {
 function renderCore(s) {
   const core = s.core;
   if (!core) {
+    $("core-note").textContent = "";
     $("core").innerHTML = '<p class="empty">No core prices yet.</p>';
     return;
   }
@@ -209,7 +230,7 @@ function renderSatellite(s) {
           <span class="pair">${esc(t.pair)}</span>
           <span class="pnl num ${cls}">${eurSigned(total)}</span>
         </div>
-        <p class="trade-sub">Trade ${esc(t.id)} · opened ${esc(t.date_opened)} · ${eur(t.size_eur)} · ${t.thirds_sold} of 3 thirds sold</p>
+        <p class="trade-sub">Trade ${esc(t.id)} · opened ${esc(t.date_opened)} · ${eur(t.size_eur)} · ${Number(t.thirds_sold)} of 3 thirds sold</p>
         ${ladder(t)}
         <dl class="facts num">
           <div><dt>Entry</dt><dd>${price(t.entry_price)}</dd></div>
@@ -253,6 +274,7 @@ function renderWatchlist(s) {
   const d = s.daily || {};
   const wl = d.watchlist || [];
   const reg = d.regime;
+  const days = Number(d.lookback_days) || 20;
   let note = d.candle_date ? `Daily close ${d.candle_date}` : "";
   if (reg && reg.enabled) {
     note += ` · regime filter ${reg.allows_entries === false ? "blocking (BTC below its average)" : "on, BTC above its average"}`;
@@ -271,7 +293,7 @@ function renderWatchlist(s) {
         cell = status("good", "up", `Breakout ${pctSigned(dist)}`);
       } else {
         const width = dist == null ? 0 : (Math.abs(Math.min(0, dist)) / span) * 100;
-        cell = `<div class="dist" data-tip="${esc(`${w.pair}: ${pctSigned(dist)} vs its 20-day high`)}">
+        cell = `<div class="dist" data-tip="${esc(`${w.pair}: ${pctSigned(dist)} vs its ${days}-day high`)}">
           <div class="bar-track"><div class="bar" style="width:${width}%"></div><div class="zero"></div></div>
           <span class="val num">${pctSigned(dist)}</span></div>`;
       }
@@ -285,7 +307,7 @@ function renderWatchlist(s) {
     })
     .join("");
   $("watchlist").innerHTML = `<table>
-    <thead><tr><th>Coin</th><th class="r">Close (USDC)</th><th>vs 20-day high</th><th class="r hide-sm">Avg volume 7d</th><th class="r hide-sm">Spread</th></tr></thead>
+    <thead><tr><th>Coin</th><th class="r">Close (USDC)</th><th>vs ${days}-day high</th><th class="r hide-sm">Avg volume 7d</th><th class="r hide-sm">Spread</th></tr></thead>
     <tbody>${rows}</tbody></table>`;
 }
 
@@ -296,7 +318,12 @@ function renderAlerts(s) {
     : '<li class="empty">No alerts yet.</li>';
 }
 
+// A run that found OKX unreachable on the very first run has no satellite yet.
+const NO_SATELLITE = { balance_eur: null, unrealized_eur: null, realized_eur: null, win_rate: null,
+  closed_trades: 0, open_trades: [], status: null, floor_eur: null, sweep_above_eur: null };
+
 function render(s) {
+  if (!s.satellite) s.satellite = NO_SATELLITE;
   renderHeader(s);
   renderHero(s);
   renderCore(s);
