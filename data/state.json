@@ -1,51 +1,51 @@
 {
-  "updated_at": "2026-10-09T08:29:08Z",
+  "updated_at": "2026-10-09T08:52:58Z",
   "source": "https://eea.okx.com",
   "prices": {
-    "USDC-EUR": 0.89079,
-    "BTC-USDC": 82546.3,
-    "ETH-USDC": 2498.68
+    "USDC-EUR": 0.8913,
+    "BTC-USDC": 82569.9,
+    "ETH-USDC": 2500.89
   },
   "core": {
-    "total_eur": 80.89838190364232,
-    "usdc_eur": 0.89079,
+    "total_eur": 96.9714451776882,
+    "usdc_eur": 0.8913,
     "rebalance_due": "2026-10",
     "assets": [
       {
         "asset": "BTC",
         "quantity": 0.0005500242,
-        "price_eur": 73531.418577,
-        "value_eur": 40.44405967767957,
-        "weight": 0.499936571,
+        "price_eur": 73594.55187,
+        "value_eur": 40.47878451665525,
+        "weight": 0.41742994,
         "target": 0.5,
         "low": 0.45,
         "high": 0.55,
-        "out_of_band": false,
-        "rebalance_eur": 0.005131274141591497
+        "out_of_band": true,
+        "rebalance_eur": 8.006938072188845
       },
       {
         "asset": "ETH",
         "quantity": 0.0109997293,
-        "price_eur": 2225.7991571999996,
-        "value_eur": 24.483188205368144,
-        "weight": 0.30264126,
+        "price_eur": 2229.043257,
+        "value_eur": 24.518872424990327,
+        "weight": 0.252846313,
         "target": 0.3,
         "low": 0.25,
         "high": 0.35,
         "out_of_band": false,
-        "rebalance_eur": -0.21367363427545083
+        "rebalance_eur": 4.572561128316128
       },
       {
         "asset": "USDC",
-        "quantity": 17.92917974,
-        "price_eur": 0.89079,
-        "value_eur": 15.971134020594599,
-        "weight": 0.197422169,
+        "quantity": 35.8732056951,
+        "price_eur": 0.8913,
+        "value_eur": 31.973788236042626,
+        "weight": 0.329723747,
         "target": 0.2,
         "low": 0.15,
         "high": 0.25,
-        "out_of_band": false,
-        "rebalance_eur": 0.2085423601338661
+        "out_of_band": true,
+        "rebalance_eur": -12.579499200504989
       }
     ]
   },
@@ -161,6 +161,11 @@
   },
   "problems": [],
   "recent_alerts": [
+    {
+      "time": "2026-10-09T08:52:58Z",
+      "key": "drift:BTC+USDC",
+      "text": "⚖️ Core drift\nBTC at 41.7% (band 45.0%–55.0%, target 50.0%)\nUSDC at 33.0% (band 15.0%–25.0%, target 20.0%)\nCore value 96.97 €. To return to target: BTC buy 8.01 €, ETH buy 4.57 €, USDC sell 12.58 €."
+    },
     {
       "time": "2026-10-09T00:00:51Z",
       "key": "heartbeat:2026-10-09",

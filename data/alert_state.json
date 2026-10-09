@@ -1,5 +1,7 @@
 {
-  "active": {},
+  "active": {
+    "drift:BTC+USDC": "2026-10-09T08:52:58Z"
+  },
   "events": {
     "heartbeat:2026-10-08": "2026-10-08T15:48:52Z",
     "rebalance:2026-10": "2026-10-08T19:23:11Z",
@@ -26,6 +28,11 @@
       "time": "2026-10-09T00:00:51Z",
       "key": "heartbeat:2026-10-09",
       "text": "✅ Daily check-in: the job is running.\nCore 64.39 € · Satellite 20.00 € · open trades 0"
+    },
+    {
+      "time": "2026-10-09T08:52:58Z",
+      "key": "drift:BTC+USDC",
+      "text": "⚖️ Core drift\nBTC at 41.7% (band 45.0%–55.0%, target 50.0%)\nUSDC at 33.0% (band 15.0%–25.0%, target 20.0%)\nCore value 96.97 €. To return to target: BTC buy 8.01 €, ETH buy 4.57 €, USDC sell 12.58 €."
     }
   ]
 }
