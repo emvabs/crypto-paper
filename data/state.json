@@ -1,51 +1,51 @@
 {
-  "updated_at": "2026-10-09T20:39:58Z",
+  "updated_at": "2026-10-09T21:01:17Z",
   "source": "https://eea.okx.com",
   "prices": {
     "USDC-EUR": 0.89298,
-    "BTC-USDC": 82350.0,
-    "ETH-USDC": 2476.71
+    "BTC-USDC": 82445.3,
+    "ETH-USDC": 2481.62
   },
   "core": {
-    "total_eur": 80.7983112999072,
+    "total_eur": 80.89334756895849,
     "usdc_eur": 0.89298,
     "rebalance_due": "2026-10",
     "assets": [
       {
         "asset": "BTC",
         "quantity": 0.0005500242,
-        "price_eur": 73536.903,
-        "value_eur": 40.44707624305261,
-        "weight": 0.500593089,
+        "price_eur": 73622.003994,
+        "value_eur": 40.493883849196656,
+        "weight": 0.500583609,
         "target": 0.5,
         "low": 0.45,
         "high": 0.55,
         "out_of_band": false,
-        "rebalance_eur": -0.047920593099010526
+        "rebalance_eur": -0.04721006471740819
       },
       {
         "asset": "ETH",
         "quantity": 0.0109997293,
-        "price_eur": 2211.6524958,
-        "value_eur": 24.327578759469386,
-        "weight": 0.301090188,
+        "price_eur": 2216.0370276,
+        "value_eur": 24.375807422376628,
+        "weight": 0.301332658,
         "target": 0.3,
         "low": 0.25,
         "high": 0.35,
         "out_of_band": false,
-        "rebalance_eur": -0.08808536949722824
+        "rebalance_eur": -0.1078031516890799
       },
       {
         "asset": "USDC",
         "quantity": 17.9440259551,
         "price_eur": 0.89298,
         "value_eur": 16.023656297385198,
-        "weight": 0.198316723,
+        "weight": 0.198083733,
         "target": 0.2,
         "low": 0.15,
         "high": 0.25,
         "out_of_band": false,
-        "rebalance_eur": 0.13600596259624326
+        "rebalance_eur": 0.15501321640650156
       }
     ]
   },
