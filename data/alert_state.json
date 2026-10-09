@@ -4,7 +4,8 @@
   },
   "events": {
     "heartbeat:2026-10-08": "2026-10-08T15:48:52Z",
-    "rebalance:2026-10": "2026-10-08T19:23:11Z"
+    "rebalance:2026-10": "2026-10-08T19:23:11Z",
+    "heartbeat:2026-10-09": "2026-10-09T00:00:51Z"
   },
   "pending": [],
   "history": [
@@ -22,6 +23,11 @@
       "time": "2026-10-08T19:23:11Z",
       "key": "rebalance:2026-10",
       "text": "🗓️ Quarterly rebalance due (2026-10). Core value 64.16 €.\nTo return to target: BTC sell 7.98 €, ETH sell 4.85 €, USDC buy 12.83 €."
+    },
+    {
+      "time": "2026-10-09T00:00:51Z",
+      "key": "heartbeat:2026-10-09",
+      "text": "✅ Daily check-in: the job is running.\nCore 64.39 € · Satellite 20.00 € · open trades 0"
     }
   ]
 }
