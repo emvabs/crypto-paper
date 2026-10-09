@@ -1,7 +1,5 @@
 {
-  "active": {
-    "drift:BTC+ETH+USDC": "2026-10-08T19:23:11Z"
-  },
+  "active": {},
   "events": {
     "heartbeat:2026-10-08": "2026-10-08T15:48:52Z",
     "rebalance:2026-10": "2026-10-08T19:23:11Z",

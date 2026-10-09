@@ -1,51 +1,51 @@
 {
-  "updated_at": "2026-10-09T08:06:30Z",
+  "updated_at": "2026-10-09T08:29:08Z",
   "source": "https://eea.okx.com",
   "prices": {
-    "USDC-EUR": 0.89115,
-    "BTC-USDC": 82590.0,
-    "ETH-USDC": 2501.31
+    "USDC-EUR": 0.89079,
+    "BTC-USDC": 82546.3,
+    "ETH-USDC": 2498.68
   },
   "core": {
-    "total_eur": 65.00068736662027,
-    "usdc_eur": 0.89115,
+    "total_eur": 80.89838190364232,
+    "usdc_eur": 0.89079,
     "rebalance_due": "2026-10",
     "assets": [
       {
         "asset": "BTC",
         "quantity": 0.0005500242,
-        "price_eur": 73600.0785,
-        "value_eur": 40.4818242968997,
-        "weight": 0.622790711,
+        "price_eur": 73531.418577,
+        "value_eur": 40.44405967767957,
+        "weight": 0.499936571,
         "target": 0.5,
         "low": 0.45,
         "high": 0.55,
-        "out_of_band": true,
-        "rebalance_eur": -7.9814806135895715
+        "out_of_band": false,
+        "rebalance_eur": 0.005131274141591497
       },
       {
         "asset": "ETH",
         "quantity": 0.0109997293,
-        "price_eur": 2229.0424064999997,
-        "value_eur": 24.51886306972056,
-        "weight": 0.377209289,
+        "price_eur": 2225.7991571999996,
+        "value_eur": 24.483188205368144,
+        "weight": 0.30264126,
         "target": 0.3,
         "low": 0.25,
         "high": 0.35,
-        "out_of_band": true,
-        "rebalance_eur": -5.01865685973448
+        "out_of_band": false,
+        "rebalance_eur": -0.21367363427545083
       },
       {
         "asset": "USDC",
-        "quantity": 0,
-        "price_eur": 0.89115,
-        "value_eur": 0.0,
-        "weight": 0.0,
+        "quantity": 17.92917974,
+        "price_eur": 0.89079,
+        "value_eur": 15.971134020594599,
+        "weight": 0.197422169,
         "target": 0.2,
         "low": 0.15,
         "high": 0.25,
-        "out_of_band": true,
-        "rebalance_eur": 13.000137473324054
+        "out_of_band": false,
+        "rebalance_eur": 0.2085423601338661
       }
     ]
   },
@@ -56,6 +56,7 @@
     "balance_eur": 20.0,
     "status": "ok",
     "floor_eur": 10,
+    "max_open_trades": 3,
     "sweep_above_eur": 25,
     "realized_eur": 0,
     "unrealized_eur": 0,
