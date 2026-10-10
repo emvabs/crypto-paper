@@ -1,51 +1,51 @@
 {
-  "updated_at": "2026-10-10T00:06:02Z",
+  "updated_at": "2026-10-10T00:36:18Z",
   "source": "https://eea.okx.com",
   "prices": {
-    "USDC-EUR": 0.89316,
-    "BTC-USDC": 82522.1,
-    "ETH-USDC": 2484.41
+    "USDC-EUR": 0.89321,
+    "BTC-USDC": 82512.1,
+    "ETH-USDC": 2486.95
   },
   "core": {
-    "total_eur": 80.9747925683724,
-    "usdc_eur": 0.89316,
+    "total_eur": 80.99936842123702,
+    "usdc_eur": 0.89321,
     "rebalance_due": "2026-10",
     "assets": [
       {
         "asset": "BTC",
         "quantity": 0.0005500242,
-        "price_eur": 73705.438836,
-        "value_eur": 40.539775031419836,
-        "weight": 0.500646853,
+        "price_eur": 73700.632841,
+        "value_eur": 40.53713161786475,
+        "weight": 0.500462317,
         "target": 0.5,
         "low": 0.45,
         "high": 0.55,
         "out_of_band": false,
-        "rebalance_eur": -0.052378747233636225
+        "rebalance_eur": -0.03744740724624486
       },
       {
         "asset": "ETH",
         "quantity": 0.0109997293,
-        "price_eur": 2218.9756356,
-        "value_eur": 24.408131314895442,
-        "weight": 0.30142876,
+        "price_eur": 2221.3686095,
+        "value_eur": 24.434453380017406,
+        "weight": 0.30166227,
         "target": 0.3,
         "low": 0.25,
         "high": 0.35,
         "out_of_band": false,
-        "rebalance_eur": -0.1156935443837268
+        "rebalance_eur": -0.13464285364629766
       },
       {
         "asset": "USDC",
         "quantity": 17.9440259551,
-        "price_eur": 0.89316,
-        "value_eur": 16.026886222057115,
-        "weight": 0.197924388,
+        "price_eur": 0.89321,
+        "value_eur": 16.02778342335487,
+        "weight": 0.197875412,
         "target": 0.2,
         "low": 0.15,
         "high": 0.25,
         "out_of_band": false,
-        "rebalance_eur": 0.16807229161736525
+        "rebalance_eur": 0.17209026089253576
       }
     ]
   },
@@ -163,6 +163,11 @@
   "problems": [],
   "recent_alerts": [
     {
+      "time": "2026-10-10T00:36:18Z",
+      "key": "heartbeat:2026-10-10",
+      "text": "✅ Daily check-in: the job is running.\nCore 80.97 € · Satellite 20.00 € · open trades 0"
+    },
+    {
       "time": "2026-10-09T08:52:58Z",
       "key": "drift:BTC+USDC",
       "text": "⚖️ Core drift\nBTC at 41.7% (band 45.0%–55.0%, target 50.0%)\nUSDC at 33.0% (band 15.0%–25.0%, target 20.0%)\nCore value 96.97 €. To return to target: BTC buy 8.01 €, ETH buy 4.57 €, USDC sell 12.58 €."
@@ -188,5 +193,5 @@
       "text": "✅ Daily check-in: the job is running.\nCore 0.00 € · Satellite 20.00 € · open trades 0"
     }
   ],
-  "pending_alerts": 1
+  "pending_alerts": 0
 }
