@@ -1,52 +1,52 @@
 {
-  "updated_at": "2026-10-12T21:40:08Z",
+  "updated_at": "2026-10-12T22:00:41Z",
   "source": "https://eea.okx.com",
   "prices": {
-    "USDC-EUR": 0.89649,
-    "BTC-USDC": 82833.9,
-    "ETH-USDC": 2508.75,
-    "NEAR-USDC": 5.376
+    "USDC-EUR": 0.89638,
+    "BTC-USDC": 82533.4,
+    "ETH-USDC": 2490.46,
+    "NEAR-USDC": 5.144
   },
   "core": {
-    "total_eur": 81.67045991024634,
-    "usdc_eur": 0.89649,
+    "total_eur": 81.33194490594519,
+    "usdc_eur": 0.89638,
     "rebalance_due": "2026-10",
     "assets": [
       {
         "asset": "BTC",
         "quantity": 0.0005500242,
-        "price_eur": 74259.763011,
-        "value_eur": 40.84466674231487,
-        "weight": 0.500115547,
+        "price_eur": 73981.28909199999,
+        "value_eur": 40.691499347796025,
+        "weight": 0.500313861,
         "target": 0.5,
         "low": 0.45,
         "high": 0.55,
         "out_of_band": false,
-        "rebalance_eur": -0.00943678719170738
+        "rebalance_eur": -0.025526894823431467
       },
       {
         "asset": "ETH",
         "quantity": 0.0109997293,
-        "price_eur": 2249.0692875,
-        "value_eur": 24.739153339443874,
-        "weight": 0.302914339,
+        "price_eur": 2232.3985348,
+        "value_eur": 24.55577957251663,
+        "weight": 0.301920477,
         "target": 0.3,
         "low": 0.25,
         "high": 0.35,
         "out_of_band": false,
-        "rebalance_eur": -0.23801536636997214
+        "rebalance_eur": -0.15619610073307286
       },
       {
         "asset": "USDC",
         "quantity": 17.9440259551,
-        "price_eur": 0.89649,
-        "value_eur": 16.0866398284876,
-        "weight": 0.196970114,
+        "price_eur": 0.89638,
+        "value_eur": 16.084665985632537,
+        "weight": 0.197765663,
         "target": 0.2,
         "low": 0.15,
         "high": 0.25,
         "out_of_band": false,
-        "rebalance_eur": 0.24745215356167044
+        "rebalance_eur": 0.18172299555650206
       }
     ]
   },
@@ -54,33 +54,16 @@
   "satellite": {
     "start_eur": 20.0,
     "transfers_eur": 0.0,
-    "balance_eur": 20.0,
+    "balance_eur": 19.44246897196262,
     "status": "ok",
     "floor_eur": 10,
     "max_open_trades": 3,
     "sweep_above_eur": 25,
-    "realized_eur": 0,
-    "unrealized_eur": -0.35717084112149466,
-    "win_rate": null,
-    "closed_trades": 0,
-    "open_trades": [
-      {
-        "id": "1",
-        "pair": "NEAR-USDC",
-        "date_opened": "2026-10-12",
-        "entry_price": 5.778,
-        "size_eur": 5.0,
-        "price": 5.376,
-        "stop": 5.31576,
-        "target1": 6.3558,
-        "target2": 6.933599999999999,
-        "trailing_high": 5.832,
-        "trailing_level": 5.36544,
-        "thirds_sold": 0,
-        "realized_eur": 0,
-        "unrealized_eur": -0.35717084112149466
-      }
-    ]
+    "realized_eur": -0.5575310280373824,
+    "unrealized_eur": 0,
+    "win_rate": 0.0,
+    "closed_trades": 1,
+    "open_trades": []
   },
   "daily": {
     "candle_date": "2026-10-11",
@@ -180,6 +163,11 @@
   },
   "problems": [],
   "recent_alerts": [
+    {
+      "time": "2026-10-12T22:00:41Z",
+      "key": "exit:1:1+2+3",
+      "text": "🔴 Stop-loss hit — NEAR-USDC (trade 1, entry 5.778)\nThird 1/3 sold at 5.144 (stop 5.31576): -0.19 €\nThird 2/3 sold at 5.144 (stop 5.31576): -0.19 €\nThird 3/3 sold at 5.144 (stop 5.31576): -0.19 €\nTrade closed. Total P&L: -0.56 €"
+    },
     {
       "time": "2026-10-12T00:34:21Z",
       "key": "heartbeat:2026-10-12",
