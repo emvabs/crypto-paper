@@ -1,52 +1,52 @@
 {
-  "updated_at": "2026-10-12T20:24:11Z",
+  "updated_at": "2026-10-12T20:54:21Z",
   "source": "https://eea.okx.com",
   "prices": {
-    "USDC-EUR": 0.89664,
-    "BTC-USDC": 82978.8,
-    "ETH-USDC": 2521.51,
-    "NEAR-USDC": 5.507
+    "USDC-EUR": 0.8966,
+    "BTC-USDC": 83050.1,
+    "ETH-USDC": 2520.5,
+    "NEAR-USDC": 5.501
   },
   "core": {
-    "total_eur": 81.88143510943584,
-    "usdc_eur": 0.89664,
+    "total_eur": 81.90298303256122,
+    "usdc_eur": 0.8966,
     "rebalance_due": "2026-10",
     "assets": [
       {
         "asset": "BTC",
         "quantity": 0.0005500242,
-        "price_eur": 74402.111232,
-        "value_eur": 40.922961708691815,
-        "weight": 0.499783152,
+        "price_eur": 74462.71966,
+        "value_eur": 40.95629781081578,
+        "weight": 0.500058683,
         "target": 0.5,
         "low": 0.45,
         "high": 0.55,
         "out_of_band": false,
-        "rebalance_eur": 0.017755846026104014
+        "rebalance_eur": -0.004806294535167937
       },
       {
         "asset": "ETH",
         "quantity": 0.0109997293,
-        "price_eur": 2260.8867264,
-        "value_eur": 24.869141968363163,
-        "weight": 0.303721374,
+        "price_eur": 2259.8803,
+        "value_eur": 24.858071550402787,
+        "weight": 0.303506303,
         "target": 0.3,
         "low": 0.25,
         "high": 0.35,
         "out_of_band": false,
-        "rebalance_eur": -0.30471143553241054
+        "rebalance_eur": -0.28717664063441967
       },
       {
         "asset": "USDC",
         "quantity": 17.9440259551,
-        "price_eur": 0.89664,
-        "value_eur": 16.089331432380863,
-        "weight": 0.196495474,
+        "price_eur": 0.8966,
+        "value_eur": 16.088613671342657,
+        "weight": 0.196435015,
         "target": 0.2,
         "low": 0.15,
         "high": 0.25,
         "out_of_band": false,
-        "rebalance_eur": 0.2869555895063065
+        "rebalance_eur": 0.2919829351695899
       }
     ]
   },
@@ -60,7 +60,7 @@
     "max_open_trades": 3,
     "sweep_above_eur": 25,
     "realized_eur": 0,
-    "unrealized_eur": -0.2440364252336447,
+    "unrealized_eur": -0.24921815420560658,
     "win_rate": null,
     "closed_trades": 0,
     "open_trades": [
@@ -70,7 +70,7 @@
         "date_opened": "2026-10-12",
         "entry_price": 5.778,
         "size_eur": 5.0,
-        "price": 5.507,
+        "price": 5.501,
         "stop": 5.31576,
         "target1": 6.3558,
         "target2": 6.933599999999999,
@@ -78,7 +78,7 @@
         "trailing_level": 5.36544,
         "thirds_sold": 0,
         "realized_eur": 0,
-        "unrealized_eur": -0.2440364252336447
+        "unrealized_eur": -0.24921815420560658
       }
     ]
   },
