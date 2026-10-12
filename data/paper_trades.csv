@@ -1,2 +1,2 @@
 id,date_opened,pair,entry_price,size_eur,exit1_price,exit1_time,exit2_price,exit2_time,exit3_price,exit3_time,exit3_reason,trailing_high,date_closed,status,notes
-1,2026-10-12,NEAR-USDC,5.778,5,,,,,,,,,,,dashboard
+1,2026-10-12,NEAR-USDC,5.778,5,,,,,,,,5.82,,Open,dashboard
