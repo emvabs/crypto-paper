@@ -2,3 +2,4 @@ date,bag,pair,side,quantity,price,fee,notes
 2026-10-08T19:08Z,core,BTC-USDC,buy,0.0005500242,81411.2,0.04,"dashboard; €40.00 at €72,651.35/BTC"
 2026-10-08T19:09Z,core,ETH-USDC,buy,0.0109997293,2442.5,0.024,"dashboard; €24.00 at €2,179.69/ETH (corrected from €30.00)"
 2026-10-09T08:28Z,core,USDC-EUR,buy,17.9440259551,0.89077,0.016,dashboard; €16.00 at €0.89/USDC
+2026-10-12T08:27Z,satellite,NEAR-USDC,buy,0.967484367,5.778,0.005,dashboard; €5.00 at €5.16/NEAR
