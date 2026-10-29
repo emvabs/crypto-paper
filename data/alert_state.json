@@ -24,7 +24,8 @@
     "heartbeat:2026-10-25": "2026-10-25T01:32:22Z",
     "heartbeat:2026-10-26": "2026-10-26T01:41:15Z",
     "heartbeat:2026-10-27": "2026-10-27T02:28:22Z",
-    "heartbeat:2026-10-28": "2026-10-28T02:23:29Z"
+    "heartbeat:2026-10-28": "2026-10-28T02:23:29Z",
+    "heartbeat:2026-10-29": "2026-10-29T00:48:35Z"
   },
   "pending": [],
   "history": [
@@ -156,6 +157,11 @@
     {
       "time": "2026-10-28T02:23:29Z",
       "key": "heartbeat:2026-10-28",
+      "text": "✅ Daily check-in: the job is running.\nCore 79.42 € · Satellite 19.44 € · open trades 0"
+    },
+    {
+      "time": "2026-10-29T00:48:35Z",
+      "key": "heartbeat:2026-10-29",
       "text": "✅ Daily check-in: the job is running.\nCore 79.42 € · Satellite 19.44 € · open trades 0"
     }
   ]
