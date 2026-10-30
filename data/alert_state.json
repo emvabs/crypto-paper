@@ -25,7 +25,9 @@
     "heartbeat:2026-10-26": "2026-10-26T01:41:15Z",
     "heartbeat:2026-10-27": "2026-10-27T02:28:22Z",
     "heartbeat:2026-10-28": "2026-10-28T02:23:29Z",
-    "heartbeat:2026-10-29": "2026-10-29T00:48:35Z"
+    "heartbeat:2026-10-29": "2026-10-29T00:48:35Z",
+    "breakout:HYPE-USDC:2026-10-29": "2026-10-30T02:52:35Z",
+    "heartbeat:2026-10-30": "2026-10-30T02:52:35Z"
   },
   "pending": [],
   "history": [
@@ -163,6 +165,16 @@
       "time": "2026-10-29T00:48:35Z",
       "key": "heartbeat:2026-10-29",
       "text": "✅ Daily check-in: the job is running.\nCore 79.42 € · Satellite 19.44 € · open trades 0"
+    },
+    {
+      "time": "2026-10-30T02:52:35Z",
+      "key": "breakout:HYPE-USDC:2026-10-29",
+      "text": "🚀 Breakout — HYPE-USDC\nClosed 88.859 on 2026-10-29, above its 20-day high 88.028.\nSuggested paper entry: 5.00 € near 88.859\nStop 81.7503 · T1 97.7449 · T2 106.63\nOpen slots: 3 of 3. Log it in paper_trades.csv to track it."
+    },
+    {
+      "time": "2026-10-30T02:52:35Z",
+      "key": "heartbeat:2026-10-30",
+      "text": "✅ Daily check-in: the job is running.\nCore 75.65 € · Satellite 19.44 € · open trades 0"
     }
   ]
 }
