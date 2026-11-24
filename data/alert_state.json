@@ -53,15 +53,11 @@
     "heartbeat:2026-11-20": "2026-11-20T00:42:02Z",
     "heartbeat:2026-11-21": "2026-11-21T03:33:11Z",
     "heartbeat:2026-11-22": "2026-11-22T03:26:30Z",
-    "heartbeat:2026-11-23": "2026-11-23T00:27:17Z"
+    "heartbeat:2026-11-23": "2026-11-23T00:27:17Z",
+    "heartbeat:2026-11-24": "2026-11-24T04:50:51Z"
   },
   "pending": [],
   "history": [
-    {
-      "time": "2026-10-09T08:52:58Z",
-      "key": "drift:BTC+USDC",
-      "text": "⚖️ Core drift\nBTC at 41.7% (band 45.0%–55.0%, target 50.0%)\nUSDC at 33.0% (band 15.0%–25.0%, target 20.0%)\nCore value 96.97 €. To return to target: BTC buy 8.01 €, ETH buy 4.57 €, USDC sell 12.58 €."
-    },
     {
       "time": "2026-10-10T00:36:18Z",
       "key": "heartbeat:2026-10-10",
@@ -306,6 +302,11 @@
       "time": "2026-11-23T00:27:17Z",
       "key": "heartbeat:2026-11-23",
       "text": "✅ Daily check-in: the job is running.\nCore 64.25 € · Satellite 19.44 € · open trades 0"
+    },
+    {
+      "time": "2026-11-24T04:50:51Z",
+      "key": "heartbeat:2026-11-24",
+      "text": "✅ Daily check-in: the job is running.\nCore 64.05 € · Satellite 19.44 € · open trades 0"
     }
   ]
 }
