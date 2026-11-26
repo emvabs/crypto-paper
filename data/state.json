@@ -1,52 +1,52 @@
 {
-  "updated_at": "2026-11-25T18:42:02Z",
+  "updated_at": "2026-11-26T01:58:00Z",
   "source": "https://eea.okx.com",
   "prices": {
-    "USDC-EUR": 0.91082,
-    "BTC-USDC": 59567.1,
-    "ETH-USDC": 1678.99,
+    "USDC-EUR": 0.91196,
+    "BTC-USDC": 60799.1,
+    "ETH-USDC": 1700.4,
     "NEAR-USDC": 5.144
   },
   "core": {
-    "total_eur": 63.00670942099816,
-    "usdc_eur": 0.91082,
+    "total_eur": 63.91831154179668,
+    "usdc_eur": 0.91196,
     "rebalance_due": null,
     "assets": [
       {
         "asset": "BTC",
         "quantity": 0.0005500242,
-        "price_eur": 54254.906021999996,
-        "value_eur": 29.84151128082573,
-        "weight": 0.473624342,
+        "price_eur": 55446.347236,
+        "value_eur": 30.496832781403114,
+        "weight": 0.477122002,
         "target": 0.5,
         "low": 0.45,
         "high": 0.55,
         "out_of_band": false,
-        "rebalance_eur": 1.6618434296733497
+        "rebalance_eur": 1.4623229894952292
       },
       {
         "asset": "ETH",
         "quantity": 0.0109997293,
-        "price_eur": 1529.2576718,
-        "value_eur": 16.821420419748243,
-        "weight": 0.26697824,
+        "price_eur": 1550.696784,
+        "value_eur": 17.05724485038057,
+        "weight": 0.266860066,
         "target": 0.3,
         "low": 0.25,
         "high": 0.35,
         "out_of_band": false,
-        "rebalance_eur": 2.0805924065512063
+        "rebalance_eur": 2.118248612158433
       },
       {
         "asset": "USDC",
         "quantity": 17.9440259551,
-        "price_eur": 0.91082,
-        "value_eur": 16.343777720424182,
-        "weight": 0.259397418,
+        "price_eur": 0.91196,
+        "value_eur": 16.364233910012995,
+        "weight": 0.256017932,
         "target": 0.2,
         "low": 0.15,
         "high": 0.25,
         "out_of_band": true,
-        "rebalance_eur": -3.742435836224549
+        "rebalance_eur": -3.580571601653659
       }
     ]
   },
@@ -66,88 +66,88 @@
     "open_trades": []
   },
   "daily": {
-    "candle_date": "2026-11-24",
-    "run_at": "2026-11-25T08:17:58Z",
+    "candle_date": "2026-11-25",
+    "run_at": "2026-11-26T01:58:00Z",
     "lookback_days": 20,
     "watchlist": [
       {
         "pair": "TAO-USDC",
-        "avg_quote_volume": 16040106.35203463,
-        "spread": 0.0012522768670309588,
-        "close": 180.86,
-        "distance_from_high": -0.2515312034431385,
-        "breakout": false
-      },
-      {
-        "pair": "ZEC-USDC",
-        "avg_quote_volume": 5131204.396388386,
-        "spread": 0.0007157407917194046,
-        "close": 737.71,
-        "distance_from_high": -0.467902944273741,
-        "breakout": false
-      },
-      {
-        "pair": "SOL-USDC",
-        "avg_quote_volume": 4562780.3707051,
-        "spread": 0.0002952465308532037,
-        "close": 69.6,
-        "distance_from_high": -0.29023047114011835,
-        "breakout": false
-      },
-      {
-        "pair": "XRP-USDC",
-        "avg_quote_volume": 4171121.5265868283,
-        "spread": 0.00010933143825505821,
-        "close": 0.9239,
-        "distance_from_high": -0.31067671416846976,
-        "breakout": false
-      },
-      {
-        "pair": "HYPE-USDC",
-        "avg_quote_volume": 2559296.230714157,
-        "spread": 0.0009592326139089499,
-        "close": 59.877,
-        "distance_from_high": -0.3254663842826243,
-        "breakout": false
-      },
-      {
-        "pair": "NEAR-USDC",
-        "avg_quote_volume": 1289494.7046791634,
-        "spread": 0.001052816283558559,
-        "close": 2.883,
-        "distance_from_high": -0.32466619817287423,
-        "breakout": false
-      },
-      {
-        "pair": "LINK-USDC",
-        "avg_quote_volume": 1242785.2898967857,
-        "spread": 0.0003447285262855632,
-        "close": 8.834,
-        "distance_from_high": -0.2502121880835173,
-        "breakout": false
-      },
-      {
-        "pair": "SUI-USDC",
-        "avg_quote_volume": 1200338.9879155287,
-        "spread": 0.0006245120999220405,
-        "close": 0.6474,
-        "distance_from_high": -0.32251988279614907,
-        "breakout": false
-      },
-      {
-        "pair": "DOGE-USDC",
-        "avg_quote_volume": 1194495.4736135572,
-        "spread": 0.0003684598378776564,
-        "close": 0.05523,
-        "distance_from_high": -0.294365657339977,
+        "avg_quote_volume": 12525991.894328702,
+        "spread": 0.000649913344887219,
+        "close": 181.54,
+        "distance_from_high": -0.23777133979930298,
         "breakout": false
       },
       {
         "pair": "PUMP-USDC",
-        "avg_quote_volume": 910097.7647594287,
-        "spread": 0.0008382229673092337,
-        "close": 0.002442,
-        "distance_from_high": -0.4638858397365532,
+        "avg_quote_volume": 7594073.811407286,
+        "spread": 0.00037986704653376365,
+        "close": 0.002575,
+        "distance_from_high": -0.41223464962337375,
+        "breakout": false
+      },
+      {
+        "pair": "ZEC-USDC",
+        "avg_quote_volume": 5122457.4339547,
+        "spread": 0.0007206928947401586,
+        "close": 770.05,
+        "distance_from_high": -0.44457667950548907,
+        "breakout": false
+      },
+      {
+        "pair": "SOL-USDC",
+        "avg_quote_volume": 4755557.734310842,
+        "spread": 0.0002816504717644842,
+        "close": 70.4,
+        "distance_from_high": -0.2744512006595897,
+        "breakout": false
+      },
+      {
+        "pair": "XRP-USDC",
+        "avg_quote_volume": 4292256.440631571,
+        "spread": 0.00010512483574243257,
+        "close": 0.9368,
+        "distance_from_high": -0.29340775380902107,
+        "breakout": false
+      },
+      {
+        "pair": "HYPE-USDC",
+        "avg_quote_volume": 2774529.5577199426,
+        "spread": 0.0007763472860191937,
+        "close": 61.654,
+        "distance_from_high": -0.2731195472765856,
+        "breakout": false
+      },
+      {
+        "pair": "NEAR-USDC",
+        "avg_quote_volume": 1445126.9430632093,
+        "spread": 0.0006453694740239509,
+        "close": 3.05,
+        "distance_from_high": -0.25098231827111994,
+        "breakout": false
+      },
+      {
+        "pair": "DOGE-USDC",
+        "avg_quote_volume": 1292118.1374665715,
+        "spread": 0.0003527959075674578,
+        "close": 0.05597,
+        "distance_from_high": -0.27659299470078835,
+        "breakout": false
+      },
+      {
+        "pair": "LINK-USDC",
+        "avg_quote_volume": 1189730.9371799857,
+        "spread": 0.0003265306122449103,
+        "close": 9.044,
+        "distance_from_high": -0.22322425491711761,
+        "breakout": false
+      },
+      {
+        "pair": "SUI-USDC",
+        "avg_quote_volume": 1173758.5800010858,
+        "spread": 0.00029616466755512806,
+        "close": 0.6668,
+        "distance_from_high": -0.28980722121631697,
         "breakout": false
       }
     ],
@@ -156,13 +156,18 @@
       "enabled": false,
       "pair": "BTC-USDC",
       "sma_days": 200,
-      "sma": 72145.15250000003,
-      "close": 59749.2,
+      "sma": 72043.65600000003,
+      "close": 60385.8,
       "allows_entries": null
     }
   },
   "problems": [],
   "recent_alerts": [
+    {
+      "time": "2026-11-26T01:58:00Z",
+      "key": "heartbeat:2026-11-26",
+      "text": "✅ Daily check-in: the job is running.\nCore 63.92 € · Satellite 19.44 € · open trades 0"
+    },
     {
       "time": "2026-11-25T08:17:58Z",
       "key": "heartbeat:2026-11-25",
@@ -257,11 +262,6 @@
       "time": "2026-11-08T02:45:53Z",
       "key": "heartbeat:2026-11-08",
       "text": "✅ Daily check-in: the job is running.\nCore 75.45 € · Satellite 19.44 € · open trades 0"
-    },
-    {
-      "time": "2026-11-07T02:56:34Z",
-      "key": "heartbeat:2026-11-07",
-      "text": "✅ Daily check-in: the job is running.\nCore 75.74 € · Satellite 19.44 € · open trades 0"
     }
   ],
   "pending_alerts": 0
