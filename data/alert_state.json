@@ -56,15 +56,11 @@
     "heartbeat:2026-11-23": "2026-11-23T00:27:17Z",
     "heartbeat:2026-11-24": "2026-11-24T04:50:51Z",
     "heartbeat:2026-11-25": "2026-11-25T08:17:58Z",
-    "heartbeat:2026-11-26": "2026-11-26T01:58:00Z"
+    "heartbeat:2026-11-26": "2026-11-26T01:58:00Z",
+    "heartbeat:2026-11-27": "2026-11-27T02:45:41Z"
   },
   "pending": [],
   "history": [
-    {
-      "time": "2026-10-12T00:34:21Z",
-      "key": "breakout:NEAR-USDC:2026-10-11",
-      "text": "🚀 Breakout — NEAR-USDC\nClosed 5.891 on 2026-10-11, above its 20-day high 5.597.\nSuggested paper entry: 5.00 € near 5.891\nStop 5.41972 · T1 6.4801 · T2 7.0692\nOpen slots: 3 of 3. Log it in paper_trades.csv to track it."
-    },
     {
       "time": "2026-10-12T00:34:21Z",
       "key": "heartbeat:2026-10-12",
@@ -309,6 +305,11 @@
       "time": "2026-11-26T01:58:00Z",
       "key": "heartbeat:2026-11-26",
       "text": "✅ Daily check-in: the job is running.\nCore 63.92 € · Satellite 19.44 € · open trades 0"
+    },
+    {
+      "time": "2026-11-27T02:45:41Z",
+      "key": "heartbeat:2026-11-27",
+      "text": "✅ Daily check-in: the job is running.\nCore 64.29 € · Satellite 19.44 € · open trades 0"
     }
   ]
 }
